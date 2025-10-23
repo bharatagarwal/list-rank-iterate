@@ -6,7 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **mobile framework comparison experiment** evaluating Flutter, React Native, Capacitor, and Lynx by building the same task list app across all frameworks. The goal is to determine which framework is best suited for AI-assisted development and the i3w platform.
 
-**Current Status**: Planning phase - no code has been implemented yet. All implementation work is ahead.
+**Current Status**:
+- **Flutter**: Phase 1 Complete ✅ (Foundation & data layer with comprehensive unit tests)
+- **React Native**: Not started
+- **Capacitor**: Not started
+- **Lynx**: Not started
+
+The Flutter implementation currently includes:
+- Task model with Hive TypeAdapter for local storage
+- TaskRepository abstracting all data operations
+- TaskProvider for state management
+- Full unit test coverage for models, repository, and provider
 
 ## What to Build
 
@@ -22,16 +32,16 @@ See README.md for complete feature specification and data model.
 
 ## Repository Structure
 
-This is currently a **planning repository**. When implementation begins, it should be organized as:
+The repository is organized with each framework implementation in its own subdirectory:
 
 ```
-/flutter-implementation/
-/react-native-implementation/
-/capacitor-implementation/
-/lynx-implementation/
+/flutter-implementation/     ← Phase 1 Complete
+/react-native-implementation/ (not started)
+/capacitor-implementation/   (not started)
+/lynx-implementation/        (not started)
 ```
 
-Each framework implementation will be a separate subdirectory with its own build system and dependencies.
+Each framework implementation is a separate subdirectory with its own build system and dependencies.
 
 ## Development Approach
 
@@ -153,8 +163,31 @@ Notes: [key findings]
 
 ## Framework-Specific Commands
 
-When implementations begin, document build/test/run commands for each framework here. For now, refer to official documentation:
-- Flutter: https://flutter.dev/docs
+### Flutter (Phase 1 Complete)
+
+```bash
+cd flutter-implementation
+
+# Run tests
+flutter test
+
+# Run code generation for Hive adapters
+flutter pub run build_runner build
+
+# Run app (iOS/Android/Web)
+flutter run
+
+# Build release
+flutter build apk      # Android
+flutter build ios      # iOS
+flutter build web      # Web
+```
+
+### React Native (Not Started)
 - React Native: https://reactnative.dev/docs
+
+### Capacitor (Not Started)
 - Capacitor: https://capacitorjs.com/docs
+
+### Lynx (Not Started)
 - Lynx: https://lynxjs.org/
