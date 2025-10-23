@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import '../models/task.dart';
-import '../repositories/task_repository.dart';
+import '../repositories/base_task_repository.dart';
 
 class TaskProvider extends ChangeNotifier {
-  final TaskRepository _repository;
+  final BaseTaskRepository _repository;
   List<Task> _tasks = [];
   bool _isLoading = false;
 

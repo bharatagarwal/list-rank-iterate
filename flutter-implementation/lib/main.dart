@@ -1,30 +1,39 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moon_design/moon_design.dart';
 import 'package:provider/provider.dart';
 import 'models/task.dart';
 import 'providers/task_provider.dart';
+import 'repositories/base_task_repository.dart';
 import 'repositories/task_repository.dart';
+import 'repositories/shared_preferences_task_repository.dart';
+import 'screens/task_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Hive
-  await Hive.initFlutter();
+  // Conditionally choose the repository based on the platform
+  // Web (WASM): Use SharedPreferences with localStorage
+  // Mobile/Desktop: Use Hive with file system
+  final dynamic taskRepository =
+      kIsWeb ? SharedPreferencesTaskRepository() : TaskRepository();
 
-  // Register Hive adapters
-  Hive.registerAdapter(TaskAdapter());
-  Hive.registerAdapter(TaskStatusAdapter());
+  // Initialize platform-specific dependencies if not on web
+  if (!kIsWeb) {
+    await Hive.initFlutter();
+    Hive.registerAdapter(TaskAdapter());
+    Hive.registerAdapter(TaskStatusAdapter());
+  }
 
-  // Initialize repository
-  final taskRepository = TaskRepository();
+  // Initialize the chosen repository
   await taskRepository.init();
 
   runApp(MyApp(taskRepository: taskRepository));
 }
 
 class MyApp extends StatelessWidget {
-  final TaskRepository taskRepository;
+  final BaseTaskRepository taskRepository;
 
   const MyApp({super.key, required this.taskRepository});
 
@@ -34,86 +43,65 @@ class MyApp extends StatelessWidget {
       create: (_) => TaskProvider(taskRepository)..loadTasks(),
       child: MaterialApp(
         title: 'List, Rank, Iterate',
-        theme: ThemeData.light().copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            MoonTheme(
-              tokens: MoonTokens.light,
-            ),
-          ],
-        ),
-        darkTheme: ThemeData.dark().copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            MoonTheme(
-              tokens: MoonTokens.dark,
-            ),
-          ],
-        ),
+        theme: _buildLightTheme(),
+        darkTheme: _buildDarkTheme(),
         themeMode: ThemeMode.system,
-        home: const MyHomePage(),
+        home: const TaskListScreen(),
       ),
     );
   }
-}
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+  ThemeData _buildLightTheme() {
+    final base = ThemeData(
+      brightness: Brightness.light,
+      useMaterial3: true,
+    );
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('List, Rank, Iterate'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Phase 1: Foundation Complete',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Data layer with unit tests ready.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 32),
-            Consumer<TaskProvider>(
-              builder: (context, taskProvider, child) {
-                return Column(
-                  children: [
-                    Text(
-                      'Total Tasks: ${taskProvider.tasks.length}',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      'Active: ${taskProvider.activeTasks.length}',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      'Completed: ${taskProvider.completedTasks.length}',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      'Archived: ${taskProvider.archivedTasks.length}',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+    return base.copyWith(
+      scaffoldBackgroundColor: MoonTokens.light.colors.gohan,
+      appBarTheme: AppBarTheme(
+        backgroundColor: MoonTokens.light.colors.goku,
+        foregroundColor: MoonTokens.light.colors.bulma,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        titleTextStyle: MoonTokens.light.typography.heading.text20.copyWith(
+          color: MoonTokens.light.colors.bulma,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final provider = context.read<TaskProvider>();
-          await provider.addTask('Test task ${DateTime.now().millisecondsSinceEpoch}');
-        },
-        tooltip: 'Add Test Task',
-        child: const Icon(Icons.add),
+      colorScheme: base.colorScheme.copyWith(
+        primary: MoonTokens.light.colors.piccolo,
+        secondary: MoonTokens.light.colors.hit,
       ),
+      extensions: <ThemeExtension<dynamic>>[
+        MoonTheme(tokens: MoonTokens.light),
+      ],
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    final base = ThemeData(
+      brightness: Brightness.dark,
+      useMaterial3: true,
+    );
+
+    return base.copyWith(
+      scaffoldBackgroundColor: MoonTokens.dark.colors.gohan,
+      appBarTheme: AppBarTheme(
+        backgroundColor: MoonTokens.dark.colors.goku,
+        foregroundColor: MoonTokens.dark.colors.bulma,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        titleTextStyle: MoonTokens.dark.typography.heading.text20.copyWith(
+          color: MoonTokens.dark.colors.bulma,
+        ),
+      ),
+      colorScheme: base.colorScheme.copyWith(
+        primary: MoonTokens.dark.colors.piccolo,
+        secondary: MoonTokens.dark.colors.hit,
+      ),
+      extensions: <ThemeExtension<dynamic>>[
+        MoonTheme(tokens: MoonTokens.dark),
+      ],
     );
   }
 }

@@ -7,16 +7,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a **mobile framework comparison experiment** evaluating Flutter, React Native, Capacitor, and Lynx by building the same task list app across all frameworks. The goal is to determine which framework is best suited for AI-assisted development and the i3w platform.
 
 **Current Status**:
-- **Flutter**: Phase 1 Complete ✅ (Foundation & data layer with comprehensive unit tests)
+- **Flutter**: Phase 2 Complete ✅ (Foundation, data layer, and core UI with comprehensive tests)
 - **React Native**: Not started
 - **Capacitor**: Not started
 - **Lynx**: Not started
 
 The Flutter implementation currently includes:
 - Task model with Hive TypeAdapter for local storage
+- Platform-conditional storage: Hive (mobile/desktop) and SharedPreferences (web/WASM)
 - TaskRepository abstracting all data operations
 - TaskProvider for state management
-- Full unit test coverage for models, repository, and provider
+- Main task list screen with Moon Design UI components
+- TaskCard widget with tap-to-edit functionality
+- Pull-down-to-add task feature with modal bottom sheet
+- Archived tasks view with read-only display
+- Navigation between active and archived task lists
+- Empty states for both views
+- Full unit test coverage (models, repository, provider)
+- Comprehensive widget test coverage (60 tests passing)
+- **Web WASM support** with localStorage persistence
 
 ## What to Build
 
@@ -35,7 +44,7 @@ See README.md for complete feature specification and data model.
 The repository is organized with each framework implementation in its own subdirectory:
 
 ```
-/flutter-implementation/     ← Phase 1 Complete
+/flutter-implementation/     ← Phase 2 Complete (Foundation + Core UI)
 /react-native-implementation/ (not started)
 /capacitor-implementation/   (not started)
 /lynx-implementation/        (not started)
@@ -163,24 +172,28 @@ Notes: [key findings]
 
 ## Framework-Specific Commands
 
-### Flutter (Phase 1 Complete)
+### Flutter (Phase 2 Complete)
 
 ```bash
 cd flutter-implementation
 
-# Run tests
+# Run tests (60 tests passing)
 flutter test
-
-# Run code generation for Hive adapters
-flutter pub run build_runner build
+# or
+make test
 
 # Run app (iOS/Android/Web)
-flutter run
+make ios           # Run on iOS simulator
+make android       # Run on Android emulator
+make web           # Run on Chrome with WASM
 
 # Build release
-flutter build apk      # Android
-flutter build ios      # iOS
-flutter build web      # Web
+make build-ios      # iOS
+make build-android  # Android APK
+make build-web      # Web with WASM
+
+# Generate Hive adapters (if models change)
+flutter pub run build_runner build
 ```
 
 ### React Native (Not Started)

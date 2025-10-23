@@ -3,15 +3,18 @@ Experiment in using multiple mobile frameworks, including Flutter, React Native,
 
 ## Current Status
 
-**Flutter Implementation: Phase 1 Complete ✅**
+**Flutter Implementation: Phase 2 Complete ✅**
 - Project foundation and data layer implemented
 - Task model with Hive TypeAdapter
 - TaskRepository with local storage
 - TaskProvider for state management
-- Comprehensive unit test coverage
+- Core UI with Moon Design components
+- Task list screen with pull-to-add and tap-to-edit
+- Archived tasks view
+- Comprehensive test coverage (60 tests passing)
 
 **Next Steps:**
-- Phase 2: Core UI & static task management
+- Phase 3: Advanced gestures & native integration
 - Other frameworks (React Native, Capacitor, Lynx): Not started
 
 ## Goal
