@@ -9,7 +9,20 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
 
   @override
   Future<void> init() async {
+    print('[SharedPrefsRepo] Initializing SharedPreferences...');
     _prefs = await SharedPreferences.getInstance();
+    print('[SharedPrefsRepo] Initialized successfully');
+
+    // Debug: Check all keys in SharedPreferences
+    final allKeys = _prefs!.getKeys();
+    print('[SharedPrefsRepo] All keys in SharedPreferences: $allKeys');
+
+    // Check what's already in storage
+    final existingData = _prefs!.getString(_tasksKey);
+    print('[SharedPrefsRepo] Existing data on init for key "$_tasksKey": ${existingData != null ? "FOUND (${existingData.length} chars)" : "NONE"}');
+    if (existingData != null) {
+      print('[SharedPrefsRepo] Data: $existingData');
+    }
   }
 
   SharedPreferences get _instance {
@@ -28,10 +41,18 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
     return decoded.map((json) => Task.fromJson(json)).toList();
   }
 
-  Future<void> _saveTasksToPrefs(List<Task> tasks) {
+  Future<void> _saveTasksToPrefs(List<Task> tasks) async {
     final List<Map<String, dynamic>> encoded =
         tasks.map((task) => task.toJson()).toList();
-    return _instance.setString(_tasksKey, jsonEncode(encoded));
+    final jsonString = jsonEncode(encoded);
+    print('[SharedPrefsRepo] Saving ${tasks.length} tasks to localStorage with key "$_tasksKey"');
+    print('[SharedPrefsRepo] JSON length: ${jsonString.length} chars');
+    final success = await _instance.setString(_tasksKey, jsonString);
+    print('[SharedPrefsRepo] Save success: $success');
+
+    // Immediate verification
+    final verify = _instance.getString(_tasksKey);
+    print('[SharedPrefsRepo] Immediate verification: ${verify != null ? "SUCCESS (${verify.length} chars)" : "FAILED"}');
   }
 
   @override

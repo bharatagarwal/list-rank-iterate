@@ -25,102 +25,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
     final colors = tokens.colors;
     final typography = tokens.typography;
 
-    final controller = TextEditingController();
-    final focusNode = FocusNode();
-    String? errorText;
-
     final result = await showMoonModalBottomSheet<String>(
       context: context,
       isExpanded: true,
       builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (modalContext, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: tokens.sizes.xs,
-                right: tokens.sizes.xs,
-                top: tokens.sizes.xs,
-                bottom:
-                    MediaQuery.of(modalContext).viewInsets.bottom +
-                    tokens.sizes.xs,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: MoonTag(
-                      backgroundColor: colors.whis10,
-                      label: Text(
-                        'New task',
-                        style: typography.body.text12.copyWith(
-                          color: colors.piccolo,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: tokens.sizes.x2s),
-                  Text(
-                    'What do you want to capture?',
-                    style: typography.heading.text20.copyWith(
-                      color: colors.bulma,
-                    ),
-                  ),
-                  SizedBox(height: tokens.sizes.x3s),
-                  MoonTextInput(
-                    key: const Key('add-task-input'),
-                    controller: controller,
-                    focusNode: focusNode,
-                    textInputSize: MoonTextInputSize.md,
-                    hintText: 'Type a task title',
-                    errorText: errorText,
-                    onSubmitted: (value) {
-                      final trimmed = value.trim();
-                      if (trimmed.isEmpty) {
-                        setModalState(() {
-                          errorText = 'Please enter a task title';
-                        });
-                        return;
-                      }
-                      Navigator.of(modalContext).pop(trimmed);
-                    },
-                  ),
-                  SizedBox(height: tokens.sizes.x3s),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      MoonTextButton(
-                        label: const Text('Cancel'),
-                        onTap: () => Navigator.of(modalContext).pop(),
-                      ),
-                      SizedBox(width: tokens.sizes.x3s),
-                      MoonFilledButton(
-                        label: const Text('Add task'),
-                        onTap: () {
-                          final trimmed = controller.text.trim();
-                          if (trimmed.isEmpty) {
-                            setModalState(() {
-                              errorText = 'Please enter a task title';
-                            });
-                            return;
-                          }
-                          Navigator.of(modalContext).pop(trimmed);
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+        return _TaskComposerModal(
+          tokens: tokens,
+          colors: colors,
+          typography: typography,
         );
       },
     );
-
-    focusNode.dispose();
-    controller.dispose();
 
     if (!mounted) return;
 
@@ -245,6 +160,117 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _TaskComposerModal extends StatefulWidget {
+  final MoonTokens tokens;
+  final MoonColors colors;
+  final MoonTypography typography;
+
+  const _TaskComposerModal({
+    required this.tokens,
+    required this.colors,
+    required this.typography,
+  });
+
+  @override
+  State<_TaskComposerModal> createState() => _TaskComposerModalState();
+}
+
+class _TaskComposerModalState extends State<_TaskComposerModal> {
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleSubmit(BuildContext context) {
+    final trimmed = _controller.text.trim();
+    if (trimmed.isEmpty) {
+      setState(() {
+        _errorText = 'Please enter a task title';
+      });
+      return;
+    }
+    Navigator.of(context).pop(trimmed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: widget.tokens.sizes.xs,
+          right: widget.tokens.sizes.xs,
+          top: widget.tokens.sizes.xs,
+          bottom: MediaQuery.of(context).viewInsets.bottom + widget.tokens.sizes.xs,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: MoonTag(
+                backgroundColor: widget.colors.whis10,
+                label: Text(
+                  'New task',
+                  style: widget.typography.body.text12.copyWith(
+                    color: widget.colors.piccolo,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: widget.tokens.sizes.x2s),
+            Text(
+              'What do you want to capture?',
+              style: widget.typography.heading.text20.copyWith(
+                color: widget.colors.bulma,
+              ),
+            ),
+            SizedBox(height: widget.tokens.sizes.x3s),
+            MoonTextInput(
+              key: const Key('add-task-input'),
+              controller: _controller,
+              focusNode: _focusNode,
+              textInputSize: MoonTextInputSize.md,
+              hintText: 'Type a task title',
+              errorText: _errorText,
+              onSubmitted: (_) => _handleSubmit(context),
+            ),
+            SizedBox(height: widget.tokens.sizes.x3s),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                MoonTextButton(
+                  label: const Text('Cancel'),
+                  onTap: () => Navigator.of(context).pop(),
+                ),
+                SizedBox(width: widget.tokens.sizes.x3s),
+                MoonFilledButton(
+                  label: const Text('Add task'),
+                  onTap: () => _handleSubmit(context),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

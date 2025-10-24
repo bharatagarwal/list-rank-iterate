@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 import '../models/task.dart';
 import '../repositories/base_task_repository.dart';
 
 class TaskProvider extends ChangeNotifier {
   final BaseTaskRepository _repository;
+  static const Uuid _uuid = Uuid();
   List<Task> _tasks = [];
   bool _isLoading = false;
 
@@ -33,7 +35,7 @@ class TaskProvider extends ChangeNotifier {
 
   Future<void> addTask(String title) async {
     final task = Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _uuid.v4(),
       title: title,
       status: TaskStatus.active,
       order: _repository.getNextOrder(),

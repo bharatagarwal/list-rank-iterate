@@ -22,9 +22,10 @@ class TaskCard extends StatefulWidget {
     this.onCancel,
     this.isEditable = true,
   }) : assert(
-         !isEditable ||
-             (onSubmitted != null && onTap != null && onCancel != null),
-         'Editable TaskCard requires onTap, onSubmitted, and onCancel callbacks.',
+         (!isEditable && !isEditing) ||
+         (isEditable && onSubmitted != null && onTap != null && onCancel != null),
+         'TaskCard with isEditable=true requires onTap, onSubmitted, and onCancel callbacks. '
+         'Also, isEditing cannot be true when isEditable is false.',
        );
 
   @override
@@ -61,7 +62,9 @@ class _TaskCardState extends State<TaskCard> {
       );
       scheduleMicrotask(_requestFocus);
     } else if (!widget.isEditing && oldWidget.isEditing) {
-      _focusNode.unfocus();
+      if (_focusNode.hasFocus) {
+        _focusNode.unfocus();
+      }
       _errorText = null;
     }
   }

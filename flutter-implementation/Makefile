@@ -8,9 +8,9 @@ ios:
 android:
 	flutter run -d android
 
-# Run on web (Chrome) with WASM
+# Run on web (Chrome) with WASM on fixed port for localStorage persistence
 web:
-	flutter run -d chrome --wasm
+	flutter run -d chrome --wasm --web-hostname localhost --web-port 5050
 
 # Build iOS release
 build-ios:
@@ -55,7 +55,7 @@ help:
 	@echo "Available targets:"
 	@echo "  make ios           - Run app on iOS simulator"
 	@echo "  make android       - Run app on Android emulator"
-	@echo "  make web           - Run app on Chrome browser with WASM"
+	@echo "  make web           - Run app on Chrome browser with WASM (localhost:5050)"
 	@echo "  make build-ios     - Build iOS release"
 	@echo "  make build-android - Build Android APK release"
 	@echo "  make build-web     - Build web release with WASM"
