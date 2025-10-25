@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:list_rank_iterate/models/task.dart';
+import 'package:list_rank_iterate/providers/task_provider.dart';
+import 'package:list_rank_iterate/screens/archived_tasks_screen.dart';
+import 'package:list_rank_iterate/widgets/task_card.dart';
+import 'package:list_rank_iterate/widgets/task_list_empty_state.dart';
 import 'package:moon_design/moon_design.dart';
 import 'package:provider/provider.dart';
-
-import '../models/task.dart';
-import '../providers/task_provider.dart';
-import '../widgets/task_card.dart';
-import '../widgets/task_list_empty_state.dart';
-import 'archived_tasks_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -71,7 +70,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       backgroundColor: colors.gohan,
       appBar: AppBar(
         title: Text(
-          'Today\'s tasks',
+          "Today's tasks",
           style: typography.heading.text20.copyWith(color: colors.bulma),
         ),
         actions: [
@@ -124,8 +123,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       ),
                       children: [
                         SizedBox(height: tokens.sizes.lg),
-                        TaskListEmptyState(
-                          key: const Key('active-empty-state'),
+                        const TaskListEmptyState(
+                          key: Key('active-empty-state'),
                           icon: MoonIcons.text_bullets_list_24_light,
                           title: 'No active tasks yet',
                           description:
@@ -167,15 +166,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
 }
 
 class _TaskComposerModal extends StatefulWidget {
-  final MoonTokens tokens;
-  final MoonColors colors;
-  final MoonTypography typography;
 
   const _TaskComposerModal({
     required this.tokens,
     required this.colors,
     required this.typography,
   });
+  final MoonTokens tokens;
+  final MoonColors colors;
+  final MoonTypography typography;
 
   @override
   State<_TaskComposerModal> createState() => _TaskComposerModalState();
@@ -219,7 +218,8 @@ class _TaskComposerModalState extends State<_TaskComposerModal> {
           left: widget.tokens.sizes.xs,
           right: widget.tokens.sizes.xs,
           top: widget.tokens.sizes.xs,
-          bottom: MediaQuery.of(context).viewInsets.bottom + widget.tokens.sizes.xs,
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom + widget.tokens.sizes.xs,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:moon_design/moon_design.dart';
 
 class TaskListEmptyState extends StatelessWidget {
+
+  const TaskListEmptyState({
+    required this.icon, required this.title, required this.description, super.key,
+  });
   final IconData icon;
   final String title;
   final String description;
-
-  const TaskListEmptyState({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,6 @@ class TaskListEmptyState extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: tokens.sizes.xs),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(tokens.sizes.x4s),

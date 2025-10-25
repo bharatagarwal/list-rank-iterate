@@ -141,13 +141,15 @@ void main() {
 
       test('deleteAll should clear all tasks', () async {
         for (var i = 0; i < 5; i++) {
-          await repository.create(Task(
-            id: '$i',
-            title: 'Task $i',
-            status: TaskStatus.active,
-            order: i,
-            createdAt: DateTime.now(),
-          ));
+          await repository.create(
+            Task(
+              id: '$i',
+              title: 'Task $i',
+              status: TaskStatus.active,
+              order: i,
+              createdAt: DateTime.now(),
+            ),
+          );
         }
         expect(testBox.length, 5);
 
@@ -160,34 +162,42 @@ void main() {
     group('Query Operations', () {
       setUp(() async {
         // Add test data
-        await repository.create(Task(
-          id: '1',
-          title: 'Active Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '2',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '3',
-          title: 'Active Task 2',
-          status: TaskStatus.active,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '4',
-          title: 'Archived Task',
-          status: TaskStatus.archived,
-          order: 3,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Active Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '2',
+            title: 'Completed Task',
+            status: TaskStatus.completed,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '3',
+            title: 'Active Task 2',
+            status: TaskStatus.active,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '4',
+            title: 'Archived Task',
+            status: TaskStatus.archived,
+            order: 3,
+            createdAt: DateTime.now(),
+          ),
+        );
       });
 
       test('getAll should return all tasks sorted by order', () {
@@ -231,7 +241,7 @@ void main() {
             createdAt: DateTime.now(),
           ),
         );
-        for (var task in tasks) {
+        for (final task in tasks) {
           await repository.create(task);
         }
 
@@ -260,7 +270,7 @@ void main() {
             createdAt: DateTime.now(),
           ),
         );
-        for (var task in tasks) {
+        for (final task in tasks) {
           await repository.create(task);
         }
 
@@ -286,20 +296,24 @@ void main() {
       });
 
       test('getNextOrder should return next available order', () async {
-        await repository.create(Task(
-          id: '1',
-          title: 'Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '2',
-          title: 'Task 2',
-          status: TaskStatus.active,
-          order: 5,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '2',
+            title: 'Task 2',
+            status: TaskStatus.active,
+            order: 5,
+            createdAt: DateTime.now(),
+          ),
+        );
 
         final nextOrder = repository.getNextOrder();
         expect(nextOrder, 6);
@@ -309,27 +323,33 @@ void main() {
     group('Archive Operations', () {
       test('archiveAll should archive active and completed tasks', () async {
         // Create tasks with different statuses
-        await repository.create(Task(
-          id: '1',
-          title: 'Active Task',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '2',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '3',
-          title: 'Already Archived',
-          status: TaskStatus.archived,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Active Task',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '2',
+            title: 'Completed Task',
+            status: TaskStatus.completed,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '3',
+            title: 'Already Archived',
+            status: TaskStatus.archived,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
 
         await repository.archiveAll();
 
@@ -344,15 +364,19 @@ void main() {
       });
 
       test('archiveAll should not affect already archived tasks', () async {
-        final originalArchiveTime = DateTime.now().subtract(const Duration(days: 1));
-        await repository.create(Task(
-          id: '1',
-          title: 'Archived Task',
-          status: TaskStatus.archived,
-          order: 0,
-          createdAt: DateTime.now(),
-          archivedAt: originalArchiveTime,
-        ));
+        final originalArchiveTime = DateTime.now().subtract(
+          const Duration(days: 1),
+        );
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Archived Task',
+            status: TaskStatus.archived,
+            order: 0,
+            createdAt: DateTime.now(),
+            archivedAt: originalArchiveTime,
+          ),
+        );
 
         await repository.archiveAll();
 

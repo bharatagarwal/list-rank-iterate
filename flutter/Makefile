@@ -1,4 +1,4 @@
-.PHONY: ios android web build-ios build-android build-web clean clean-ios clean-android clean-web test help
+.PHONY: ios android web build-ios build-android build-web clean test format lint ci help
 
 # Run on iOS simulator
 ios:
@@ -28,27 +28,29 @@ build-web:
 test:
 	flutter test
 
+# --- Local CI/CD Targets ---
+
+# Format all Dart files in the project
+format:
+	@echo "Formatting code..."
+	@dart format .
+	@echo "Code formatted."
+
+# Run the linter/static analyzer
+lint:
+	@echo "Analyzing code..."
+	@flutter analyze
+	@echo "Linter passed."
+
+# Run all CI checks: format, lint, and test
+ci: format lint test
+	@echo "All CI checks passed successfully!"
+
+# --- Clean Targets ---
+
 # Clean all build artifacts
 clean:
 	flutter clean
-
-# Clean iOS-specific build artifacts
-clean-ios:
-	rm -rf ios/build
-	rm -rf ios/Pods
-	rm -rf ios/.symlinks
-	rm -rf ios/Flutter/Flutter.framework
-	rm -rf ios/Flutter/Flutter.podspec
-
-# Clean Android-specific build artifacts
-clean-android:
-	rm -rf android/build
-	rm -rf android/app/build
-	rm -rf android/.gradle
-
-# Clean web-specific build artifacts
-clean-web:
-	rm -rf build/web
 
 # Display available commands
 help:
@@ -60,8 +62,10 @@ help:
 	@echo "  make build-android - Build Android APK release"
 	@echo "  make build-web     - Build web release with WASM"
 	@echo "  make test          - Run all tests"
+	@echo "  --- CI/CD ---"
+	@echo "  make format        - Format all Dart code"
+	@echo "  make lint          - Run static analysis linter"
+	@echo "  make ci            - Run all local CI checks (format, lint, test)"
+	@echo "  ---"
 	@echo "  make clean         - Clean all build artifacts"
-	@echo "  make clean-ios     - Clean iOS-specific build artifacts"
-	@echo "  make clean-android - Clean Android-specific build artifacts"
-	@echo "  make clean-web     - Clean web-specific build artifacts"
 	@echo "  make help          - Display this help message"

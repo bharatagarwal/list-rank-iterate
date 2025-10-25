@@ -1,14 +1,16 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:list_rank_iterate/models/task.dart';
+import 'package:list_rank_iterate/providers/task_provider.dart';
+import 'package:list_rank_iterate/repositories/base_task_repository.dart';
+import 'package:list_rank_iterate/repositories/shared_preferences_task_repository.dart';
+import 'package:list_rank_iterate/repositories/task_repository.dart';
+import 'package:list_rank_iterate/screens/task_list_screen.dart';
 import 'package:moon_design/moon_design.dart';
 import 'package:provider/provider.dart';
-import 'models/task.dart';
-import 'providers/task_provider.dart';
-import 'repositories/base_task_repository.dart';
-import 'repositories/task_repository.dart';
-import 'repositories/shared_preferences_task_repository.dart';
-import 'screens/task_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +18,16 @@ void main() async {
   // Conditionally choose the repository based on the platform
   // Web (WASM): Use SharedPreferences with localStorage
   // Mobile/Desktop: Use Hive with file system
-  final dynamic taskRepository =
-      kIsWeb ? SharedPreferencesTaskRepository() : TaskRepository();
+  final taskRepository = kIsWeb
+      ? SharedPreferencesTaskRepository()
+      : TaskRepository();
 
   // Initialize platform-specific dependencies if not on web
   if (!kIsWeb) {
     await Hive.initFlutter();
-    Hive.registerAdapter(TaskAdapter());
-    Hive.registerAdapter(TaskStatusAdapter());
+    Hive
+      ..registerAdapter(TaskAdapter())
+      ..registerAdapter(TaskStatusAdapter());
   }
 
   // Initialize the chosen repository
@@ -33,9 +37,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final BaseTaskRepository taskRepository;
+  const MyApp({required this.taskRepository, super.key});
 
-  const MyApp({super.key, required this.taskRepository});
+  final BaseTaskRepository taskRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +49,13 @@ class MyApp extends StatelessWidget {
         title: 'List, Rank, Iterate',
         theme: _buildLightTheme(),
         darkTheme: _buildDarkTheme(),
-        themeMode: ThemeMode.system,
         home: const TaskListScreen(),
       ),
     );
   }
 
   ThemeData _buildLightTheme() {
-    final base = ThemeData(
-      brightness: Brightness.light,
-      useMaterial3: true,
-    );
+    final base = ThemeData(brightness: Brightness.light, useMaterial3: true);
 
     return base.copyWith(
       scaffoldBackgroundColor: MoonTokens.light.colors.gohan,
@@ -79,10 +79,7 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData _buildDarkTheme() {
-    final base = ThemeData(
-      brightness: Brightness.dark,
-      useMaterial3: true,
-    );
+    final base = ThemeData(brightness: Brightness.dark, useMaterial3: true);
 
     return base.copyWith(
       scaffoldBackgroundColor: MoonTokens.dark.colors.gohan,
@@ -99,9 +96,7 @@ class MyApp extends StatelessWidget {
         primary: MoonTokens.dark.colors.piccolo,
         secondary: MoonTokens.dark.colors.hit,
       ),
-      extensions: <ThemeExtension<dynamic>>[
-        MoonTheme(tokens: MoonTokens.dark),
-      ],
+      extensions: <ThemeExtension<dynamic>>[MoonTheme(tokens: MoonTokens.dark)],
     );
   }
 }

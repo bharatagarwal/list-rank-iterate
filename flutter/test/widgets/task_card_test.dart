@@ -7,7 +7,6 @@ import 'package:moon_design/moon_design.dart';
 Widget _wrapWithTheme(Widget child) {
   return MaterialApp(
     theme: ThemeData.light().copyWith(
-      useMaterial3: true,
       extensions: <ThemeExtension<dynamic>>[
         MoonTheme(tokens: MoonTokens.light),
       ],
@@ -61,7 +60,6 @@ void main() {
       _wrapWithTheme(
         TaskCard(
           task: task,
-          isEditable: true,
           isEditing: true,
           onTap: () {},
           onCancel: () {},

@@ -1,15 +1,17 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/foundation.dart';
+import 'package:list_rank_iterate/models/task.dart';
+import 'package:list_rank_iterate/repositories/base_task_repository.dart';
 import 'package:uuid/uuid.dart';
-import '../models/task.dart';
-import '../repositories/base_task_repository.dart';
 
 class TaskProvider extends ChangeNotifier {
+
+  TaskProvider(this._repository);
   final BaseTaskRepository _repository;
   static const Uuid _uuid = Uuid();
   List<Task> _tasks = [];
   bool _isLoading = false;
-
-  TaskProvider(this._repository);
 
   List<Task> get tasks => _tasks;
   bool get isLoading => _isLoading;

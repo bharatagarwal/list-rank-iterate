@@ -18,7 +18,6 @@ Future<void> _pumpTaskList(
       create: (_) => TaskProvider(repository)..loadTasks(),
       child: MaterialApp(
         theme: ThemeData.light().copyWith(
-          useMaterial3: true,
           extensions: <ThemeExtension<dynamic>>[
             MoonTheme(tokens: MoonTokens.light),
           ],
@@ -90,7 +89,7 @@ void main() {
   testWidgets('TaskListScreen shows empty state when no active tasks', (
     tester,
   ) async {
-    final repository = FakeTaskRepository(initialTasks: const []);
+    final repository = FakeTaskRepository();
 
     await _pumpTaskList(tester, repository: repository);
 
@@ -117,7 +116,7 @@ void main() {
   testWidgets('Archived navigation opens archived tasks screen', (
     tester,
   ) async {
-    final repository = FakeTaskRepository(initialTasks: const []);
+    final repository = FakeTaskRepository();
 
     await _pumpTaskList(tester, repository: repository);
 

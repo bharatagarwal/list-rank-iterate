@@ -1,7 +1,11 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:list_rank_iterate/models/task.dart';
+import 'package:list_rank_iterate/repositories/base_task_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/task.dart';
-import 'base_task_repository.dart';
 
 class SharedPreferencesTaskRepository extends BaseTaskRepository {
   static const String _tasksKey = 'tasks';
@@ -9,20 +13,11 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
 
   @override
   Future<void> init() async {
-    print('[SharedPrefsRepo] Initializing SharedPreferences...');
     _prefs = await SharedPreferences.getInstance();
-    print('[SharedPrefsRepo] Initialized successfully');
-
-    // Debug: Check all keys in SharedPreferences
-    final allKeys = _prefs!.getKeys();
-    print('[SharedPrefsRepo] All keys in SharedPreferences: $allKeys');
-
-    // Check what's already in storage
-    final existingData = _prefs!.getString(_tasksKey);
-    print('[SharedPrefsRepo] Existing data on init for key "$_tasksKey": ${existingData != null ? "FOUND (${existingData.length} chars)" : "NONE"}');
-    if (existingData != null) {
-      print('[SharedPrefsRepo] Data: $existingData');
-    }
+    debugPrint(
+      '[SharedPrefsRepo] SharedPreferences initialized with keys: '
+      '${_prefs?.getKeys()}',
+    );
   }
 
   SharedPreferences get _instance {
@@ -37,28 +32,28 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
     if (tasksJson == null) {
       return [];
     }
-    final List<dynamic> decoded = jsonDecode(tasksJson);
-    return decoded.map((json) => Task.fromJson(json)).toList();
+    final decoded = jsonDecode(tasksJson) as List<dynamic>;
+    return decoded
+        .map(
+          (dynamic json) => Task.fromJson(
+            Map<String, dynamic>.from(json as Map),
+          ),
+        )
+        .toList();
   }
 
   Future<void> _saveTasksToPrefs(List<Task> tasks) async {
-    final List<Map<String, dynamic>> encoded =
-        tasks.map((task) => task.toJson()).toList();
-    final jsonString = jsonEncode(encoded);
-    print('[SharedPrefsRepo] Saving ${tasks.length} tasks to localStorage with key "$_tasksKey"');
-    print('[SharedPrefsRepo] JSON length: ${jsonString.length} chars');
+    final encodedTasks = tasks.map((task) => task.toJson()).toList();
+    final jsonString = jsonEncode(encodedTasks);
     final success = await _instance.setString(_tasksKey, jsonString);
-    print('[SharedPrefsRepo] Save success: $success');
-
-    // Immediate verification
-    final verify = _instance.getString(_tasksKey);
-    print('[SharedPrefsRepo] Immediate verification: ${verify != null ? "SUCCESS (${verify.length} chars)" : "FAILED"}');
+    debugPrint(
+      '[SharedPrefsRepo] Persisted ${tasks.length} tasks (success: $success)',
+    );
   }
 
   @override
   Future<void> create(Task task) async {
-    final tasks = _getTasksFromPrefs();
-    tasks.add(task);
+    final tasks = _getTasksFromPrefs()..add(task);
     await _saveTasksToPrefs(tasks);
   }
 
@@ -78,9 +73,7 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
 
   @override
   List<Task> getByStatus(TaskStatus status) {
-    return _getTasksFromPrefs()
-        .where((task) => task.status == status)
-        .toList()
+    return _getTasksFromPrefs().where((task) => task.status == status).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
   }
 
@@ -98,8 +91,8 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
 
   @override
   Future<void> delete(String id) async {
-    final tasks = _getTasksFromPrefs();
-    tasks.removeWhere((task) => task.id == id);
+    final tasks = _getTasksFromPrefs()
+      ..removeWhere((task) => task.id == id);
     await _saveTasksToPrefs(tasks);
   }
 
@@ -111,7 +104,7 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
   @override
   Future<void> updateMany(List<Task> tasks) async {
     final allTasks = _getTasksFromPrefs();
-    final taskMap = {for (var task in tasks) task.id: task};
+    final taskMap = {for (final task in tasks) task.id: task};
 
     for (var i = 0; i < allTasks.length; i++) {
       if (taskMap.containsKey(allTasks[i].id)) {
@@ -140,15 +133,18 @@ class SharedPreferencesTaskRepository extends BaseTaskRepository {
   @override
   Future<void> archiveAll() async {
     final tasks = _getTasksFromPrefs()
-        .where((task) =>
-            task.status == TaskStatus.active ||
-            task.status == TaskStatus.completed)
+        .where(
+          (task) =>
+              task.status == TaskStatus.active ||
+              task.status == TaskStatus.completed,
+        )
         .toList();
 
     final now = DateTime.now();
-    for (var task in tasks) {
-      task.status = TaskStatus.archived;
-      task.archivedAt = now;
+    for (final task in tasks) {
+      task
+        ..status = TaskStatus.archived
+        ..archivedAt = now;
     }
 
     await updateMany(tasks);

@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:hive/hive.dart';
-import '../models/task.dart';
-import 'base_task_repository.dart';
+import 'package:list_rank_iterate/models/task.dart';
+import 'package:list_rank_iterate/repositories/base_task_repository.dart';
 
 class TaskRepository extends BaseTaskRepository {
   static const String _boxName = 'tasks';
@@ -35,9 +37,7 @@ class TaskRepository extends BaseTaskRepository {
 
   @override
   List<Task> getByStatus(TaskStatus status) {
-    return box.values
-        .where((task) => task.status == status)
-        .toList()
+    return box.values.where((task) => task.status == status).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
   }
 
@@ -62,7 +62,7 @@ class TaskRepository extends BaseTaskRepository {
 
   @override
   Future<void> updateMany(List<Task> tasks) async {
-    final taskMap = {for (var task in tasks) task.id: task};
+    final taskMap = {for (final task in tasks) task.id: task};
     await box.putAll(taskMap);
   }
 
@@ -83,14 +83,19 @@ class TaskRepository extends BaseTaskRepository {
 
   @override
   Future<void> archiveAll() async {
-    final tasks = box.values.where((task) =>
-      task.status == TaskStatus.active || task.status == TaskStatus.completed
-    ).toList();
+    final tasks = box.values
+        .where(
+          (task) =>
+              task.status == TaskStatus.active ||
+              task.status == TaskStatus.completed,
+        )
+        .toList();
 
     final now = DateTime.now();
-    for (var task in tasks) {
-      task.status = TaskStatus.archived;
-      task.archivedAt = now;
+    for (final task in tasks) {
+      task
+        ..status = TaskStatus.archived
+        ..archivedAt = now;
     }
 
     await updateMany(tasks);

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:list_rank_iterate/providers/task_provider.dart';
+import 'package:list_rank_iterate/widgets/task_card.dart';
+import 'package:list_rank_iterate/widgets/task_list_empty_state.dart';
 import 'package:moon_design/moon_design.dart';
 import 'package:provider/provider.dart';
-
-import '../providers/task_provider.dart';
-import '../widgets/task_card.dart';
-import '../widgets/task_list_empty_state.dart';
 
 class ArchivedTasksScreen extends StatelessWidget {
   const ArchivedTasksScreen({super.key});
@@ -37,8 +36,8 @@ class ArchivedTasksScreen extends StatelessWidget {
                 ),
                 children: [
                   SizedBox(height: tokens.sizes.lg),
-                  TaskListEmptyState(
-                    key: const Key('archive-empty-state'),
+                  const TaskListEmptyState(
+                    key: Key('archive-empty-state'),
                     icon: MoonIcons.files_folder_open_24_light,
                     title: 'Archive is clean',
                     description:

@@ -1,7 +1,10 @@
-import '../models/task.dart';
+// ignore_for_file: public_member_api_docs
 
-/// Abstract base class for task repositories
-/// Allows platform-specific implementations (Hive for mobile, SharedPreferences for web)
+import 'package:list_rank_iterate/models/task.dart';
+
+/// Abstract base class for task repositories.
+/// Allows platform-specific implementations (Hive for mobile, SharedPreferences
+/// for web).
 abstract class BaseTaskRepository {
   Future<void> init();
 

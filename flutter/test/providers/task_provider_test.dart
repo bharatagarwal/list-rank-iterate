@@ -48,13 +48,15 @@ void main() {
 
       test('loadTasks should populate tasks from repository', () async {
         // Add tasks to repository
-        await repository.create(Task(
-          id: '1',
-          title: 'Test Task',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Test Task',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
 
         await provider.loadTasks();
 
@@ -63,7 +65,7 @@ void main() {
       });
 
       test('loadTasks should set loading state', () async {
-        var loadingStates = <bool>[];
+        final loadingStates = <bool>[];
         provider.addListener(() {
           loadingStates.add(provider.isLoading);
         });
@@ -78,34 +80,42 @@ void main() {
     group('Task Filtering', () {
       setUp(() async {
         // Add tasks with different statuses
-        await repository.create(Task(
-          id: '1',
-          title: 'Active Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '2',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '3',
-          title: 'Active Task 2',
-          status: TaskStatus.active,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: '4',
-          title: 'Archived Task',
-          status: TaskStatus.archived,
-          order: 3,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Active Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '2',
+            title: 'Completed Task',
+            status: TaskStatus.completed,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '3',
+            title: 'Active Task 2',
+            status: TaskStatus.active,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: '4',
+            title: 'Archived Task',
+            status: TaskStatus.archived,
+            order: 3,
+            createdAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
       });
 
@@ -118,13 +128,19 @@ void main() {
       test('completedTasks should return only completed tasks', () {
         final completedTasks = provider.completedTasks;
         expect(completedTasks.length, 1);
-        expect(completedTasks.every((t) => t.status == TaskStatus.completed), isTrue);
+        expect(
+          completedTasks.every((t) => t.status == TaskStatus.completed),
+          isTrue,
+        );
       });
 
       test('archivedTasks should return only archived tasks', () {
         final archivedTasks = provider.archivedTasks;
         expect(archivedTasks.length, 1);
-        expect(archivedTasks.every((t) => t.status == TaskStatus.archived), isTrue);
+        expect(
+          archivedTasks.every((t) => t.status == TaskStatus.archived),
+          isTrue,
+        );
       });
 
       test('filtered tasks should be sorted by order', () {
@@ -229,27 +245,33 @@ void main() {
     group('Task Reordering', () {
       test('reorderTasks should update task order', () async {
         // Create tasks directly in repository with unique IDs
-        await repository.create(Task(
-          id: 'task1',
-          title: 'Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task2',
-          title: 'Task 2',
-          status: TaskStatus.active,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task3',
-          title: 'Task 3',
-          status: TaskStatus.active,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: 'task1',
+            title: 'Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task2',
+            title: 'Task 2',
+            status: TaskStatus.active,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task3',
+            title: 'Task 3',
+            status: TaskStatus.active,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
 
         final tasks = List<Task>.from(provider.tasks);
@@ -263,27 +285,33 @@ void main() {
       });
 
       test('reorderTasks should persist to repository', () async {
-        await repository.create(Task(
-          id: 'task1',
-          title: 'Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task2',
-          title: 'Task 2',
-          status: TaskStatus.active,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task3',
-          title: 'Task 3',
-          status: TaskStatus.active,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: 'task1',
+            title: 'Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task2',
+            title: 'Task 2',
+            status: TaskStatus.active,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task3',
+            title: 'Task 3',
+            status: TaskStatus.active,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
 
         final tasks = List<Task>.from(provider.tasks);
@@ -298,27 +326,33 @@ void main() {
       });
 
       test('reorderTasks should notify listeners', () async {
-        await repository.create(Task(
-          id: 'task1',
-          title: 'Task 1',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task2',
-          title: 'Task 2',
-          status: TaskStatus.active,
-          order: 1,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'task3',
-          title: 'Task 3',
-          status: TaskStatus.active,
-          order: 2,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: 'task1',
+            title: 'Task 1',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task2',
+            title: 'Task 2',
+            status: TaskStatus.active,
+            order: 1,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'task3',
+            title: 'Task 3',
+            status: TaskStatus.active,
+            order: 2,
+            createdAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
 
         final tasks = List<Task>.from(provider.tasks);
@@ -334,47 +368,58 @@ void main() {
     });
 
     group('Bulk Operations', () {
-      test('archiveAllTasks should archive all active and completed tasks', () async {
-        await repository.create(Task(
-          id: 'active1',
-          title: 'Active Task',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'completed1',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-          completedAt: DateTime.now(),
-        ));
-        await provider.loadTasks();
+      test(
+        'archiveAllTasks should archive all active and completed tasks',
+        () async {
+          await repository.create(
+            Task(
+              id: 'active1',
+              title: 'Active Task',
+              status: TaskStatus.active,
+              order: 0,
+              createdAt: DateTime.now(),
+            ),
+          );
+          await repository.create(
+            Task(
+              id: 'completed1',
+              title: 'Completed Task',
+              status: TaskStatus.completed,
+              order: 1,
+              createdAt: DateTime.now(),
+              completedAt: DateTime.now(),
+            ),
+          );
+          await provider.loadTasks();
 
-        await provider.archiveAllTasks();
+          await provider.archiveAllTasks();
 
-        expect(provider.archivedTasks.length, 2);
-        expect(provider.activeTasks, isEmpty);
-        expect(provider.completedTasks, isEmpty);
-      });
+          expect(provider.archivedTasks.length, 2);
+          expect(provider.activeTasks, isEmpty);
+          expect(provider.completedTasks, isEmpty);
+        },
+      );
 
       test('archiveAllTasks should persist to repository', () async {
-        await repository.create(Task(
-          id: 'active1',
-          title: 'Active Task',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'completed1',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-          completedAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: 'active1',
+            title: 'Active Task',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'completed1',
+            title: 'Completed Task',
+            status: TaskStatus.completed,
+            order: 1,
+            createdAt: DateTime.now(),
+            completedAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
 
         await provider.archiveAllTasks();
@@ -384,21 +429,25 @@ void main() {
       });
 
       test('archiveAllTasks should notify listeners', () async {
-        await repository.create(Task(
-          id: 'active1',
-          title: 'Active Task',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
-        await repository.create(Task(
-          id: 'completed1',
-          title: 'Completed Task',
-          status: TaskStatus.completed,
-          order: 1,
-          createdAt: DateTime.now(),
-          completedAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: 'active1',
+            title: 'Active Task',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
+        await repository.create(
+          Task(
+            id: 'completed1',
+            title: 'Completed Task',
+            status: TaskStatus.completed,
+            order: 1,
+            createdAt: DateTime.now(),
+            completedAt: DateTime.now(),
+          ),
+        );
         await provider.loadTasks();
 
         var notifyCount = 0;
@@ -455,13 +504,15 @@ void main() {
       });
 
       test('should notify listeners on loadTasks', () async {
-        await repository.create(Task(
-          id: '1',
-          title: 'Test',
-          status: TaskStatus.active,
-          order: 0,
-          createdAt: DateTime.now(),
-        ));
+        await repository.create(
+          Task(
+            id: '1',
+            title: 'Test',
+            status: TaskStatus.active,
+            order: 0,
+            createdAt: DateTime.now(),
+          ),
+        );
 
         var notifyCount = 0;
         provider.addListener(() => notifyCount++);

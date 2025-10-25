@@ -7,7 +7,7 @@ void main() {
     late DateTime testDate;
 
     setUp(() {
-      testDate = DateTime(2025, 10, 23, 12, 0, 0);
+      testDate = DateTime(2025, 10, 23, 12);
       testTask = Task(
         id: '123',
         title: 'Test Task',
@@ -19,8 +19,8 @@ void main() {
 
     group('toJson', () {
       test('should convert task to JSON correctly with all fields', () {
-        final completedDate = DateTime(2025, 10, 23, 13, 0, 0);
-        final archivedDate = DateTime(2025, 10, 23, 14, 0, 0);
+        final completedDate = DateTime(2025, 10, 23, 13);
+        final archivedDate = DateTime(2025, 10, 23, 14);
 
         final task = Task(
           id: '456',
@@ -125,7 +125,7 @@ void main() {
 
     group('JSON roundtrip', () {
       test('should preserve all data through toJson and fromJson', () {
-        final completedDate = DateTime(2025, 10, 23, 13, 0, 0);
+        final completedDate = DateTime(2025, 10, 23, 13);
         final originalTask = Task(
           id: 'roundtrip',
           title: 'Roundtrip Task',

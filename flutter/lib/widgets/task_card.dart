@@ -1,21 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:list_rank_iterate/models/task.dart';
 import 'package:moon_design/moon_design.dart';
 
-import '../models/task.dart';
-
 class TaskCard extends StatefulWidget {
-  final Task task;
-  final bool isEditing;
-  final Future<void> Function(String)? onSubmitted;
-  final VoidCallback? onTap;
-  final VoidCallback? onCancel;
-  final bool isEditable;
 
   const TaskCard({
-    super.key,
-    required this.task,
+    required this.task, super.key,
     this.isEditing = false,
     this.onSubmitted,
     this.onTap,
@@ -23,10 +15,19 @@ class TaskCard extends StatefulWidget {
     this.isEditable = true,
   }) : assert(
          (!isEditable && !isEditing) ||
-         (isEditable && onSubmitted != null && onTap != null && onCancel != null),
+             (isEditable &&
+                 onSubmitted != null &&
+                 onTap != null &&
+                 onCancel != null),
          'TaskCard with isEditable=true requires onTap, onSubmitted, and onCancel callbacks. '
          'Also, isEditing cannot be true when isEditable is false.',
        );
+  final Task task;
+  final bool isEditing;
+  final Future<void> Function(String)? onSubmitted;
+  final VoidCallback? onTap;
+  final VoidCallback? onCancel;
+  final bool isEditable;
 
   @override
   State<TaskCard> createState() => _TaskCardState();
