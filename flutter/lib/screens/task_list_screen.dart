@@ -128,7 +128,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           icon: MoonIcons.text_bullets_list_24_light,
                           title: 'No active tasks yet',
                           description:
-                              'Pull down to add your first task and start building momentum.',
+                              'Pull down to add your first task and start '
+                              'building momentum.',
                         ),
                       ],
                     )

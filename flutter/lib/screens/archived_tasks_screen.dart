@@ -41,7 +41,8 @@ class ArchivedTasksScreen extends StatelessWidget {
                     icon: MoonIcons.files_folder_open_24_light,
                     title: 'Archive is clean',
                     description:
-                        'Completed or archived tasks will show up here for reference.',
+                        'Completed or archived tasks will show up here for '
+                        'reference.',
                   ),
                 ],
               );

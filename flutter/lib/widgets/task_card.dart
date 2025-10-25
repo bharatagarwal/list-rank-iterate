@@ -5,9 +5,9 @@ import 'package:list_rank_iterate/models/task.dart';
 import 'package:moon_design/moon_design.dart';
 
 class TaskCard extends StatefulWidget {
-
   const TaskCard({
-    required this.task, super.key,
+    required this.task,
+    super.key,
     this.isEditing = false,
     this.onSubmitted,
     this.onTap,
@@ -19,8 +19,9 @@ class TaskCard extends StatefulWidget {
                  onSubmitted != null &&
                  onTap != null &&
                  onCancel != null),
-         'TaskCard with isEditable=true requires onTap, onSubmitted, and onCancel callbacks. '
-         'Also, isEditing cannot be true when isEditable is false.',
+         'TaskCard with isEditable=true requires onTap, onSubmitted, and '
+         'onCancel callbacks. Also, isEditing cannot be true when '
+         'isEditable is false.',
        );
   final Task task;
   final bool isEditing;

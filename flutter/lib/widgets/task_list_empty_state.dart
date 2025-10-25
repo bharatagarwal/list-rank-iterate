@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:moon_design/moon_design.dart';
 
 class TaskListEmptyState extends StatelessWidget {
-
   const TaskListEmptyState({
-    required this.icon, required this.title, required this.description, super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+    super.key,
   });
   final IconData icon;
   final String title;
